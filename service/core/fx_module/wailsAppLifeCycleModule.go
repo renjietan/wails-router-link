@@ -3,7 +3,7 @@ package fx_module
 import (
 	"embed"
 	"log"
-	"wails-router-link/service/core/component/wailsApp"
+	"wails-router-link/service/core/component/wailsAppLifeCycle"
 	"wails-router-link/service/types"
 
 	"github.com/wailsapp/wails/v2"
@@ -15,10 +15,10 @@ import (
 	"go.uber.org/fx"
 )
 
-var FXWailsAppModule = func(assets embed.FS, icon []byte) fx.Option {
+var FXWailsAppLifeCycleModule = func(assets embed.FS, icon []byte) fx.Option {
 	return fx.Module("fx-wailsApp-module",
-		fx.Provide(wailsApp.NewApp),
-		fx.Invoke(func(app *wailsApp.App, appConfig *types.AppConfig) {
+		fx.Provide(wailsAppLifeCycle.NewApp),
+		fx.Invoke(func(app *wailsAppLifeCycle.App, appConfig *types.AppConfig) {
 			err := wails.Run(&options.App{
 				Title:             appConfig.AppName,
 				Width:             1024,

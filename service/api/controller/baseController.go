@@ -2,17 +2,18 @@ package controller
 
 import (
 	"strings"
+	"wails-router-link/service/core/component/appServer"
+
+	"wails-router-link/service/utility"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"wails-router-link/service/core"
-	"wails-router-link/service/utility"
 )
 
 //var logger = logger2.GetLogger()
 
 type BaseController struct {
-	App *core.AppServer
+	App *appServer.AppServer
 	DB  *gorm.DB
 }
 

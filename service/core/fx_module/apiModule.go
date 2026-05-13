@@ -3,7 +3,7 @@ package fx_module
 import (
 	"wails-router-link/service/api/controller"
 	"wails-router-link/service/api/service"
-	"wails-router-link/service/core"
+	"wails-router-link/service/core/component/appServer"
 
 	"go.uber.org/fx"
 )
@@ -20,7 +20,7 @@ var FXApiModule = fx.Module("fx-api-module",
 	// 模块 - config
 	fx.Provide(service.NewConfigService),
 	fx.Provide(controller.NewConfigController),
-	fx.Invoke(func(cfgController *controller.ConfigController, core *core.AppServer) {
+	fx.Invoke(func(cfgController *controller.ConfigController, core *appServer.AppServer) {
 		cfgController.RegisterConfigRouters()
 	}),
 	// 模块 - config detail

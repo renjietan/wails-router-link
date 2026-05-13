@@ -1,14 +1,15 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	dto "wails-router-link/service/api/DTO"
 	"wails-router-link/service/api/entity"
 	"wails-router-link/service/api/service"
-	"wails-router-link/service/core"
+	"wails-router-link/service/core/component/appServer"
 	"wails-router-link/service/types"
 	"wails-router-link/service/utility/response"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type ConfigController struct {
@@ -18,7 +19,7 @@ type ConfigController struct {
 }
 
 func NewConfigController(
-	app *core.AppServer,
+	app *appServer.AppServer,
 	db *gorm.DB,
 	service *service.ConfigService,
 	upload_service *service.UploadService,

@@ -1,4 +1,4 @@
-package core
+package appServer
 
 import (
 	"errors"
@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"wails-router-link/service/core/middlewave"
 	"wails-router-link/service/types"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AppServer struct {

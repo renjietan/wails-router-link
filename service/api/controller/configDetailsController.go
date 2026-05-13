@@ -1,11 +1,12 @@
 package controller
 
 import (
+	"wails-router-link/service/api/service"
+	"wails-router-link/service/core/component/appServer"
+	"wails-router-link/service/utility/response"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"wails-router-link/service/api/service"
-	"wails-router-link/service/core"
-	"wails-router-link/service/utility/response"
 )
 
 type ConfigDetailsController struct {
@@ -14,7 +15,7 @@ type ConfigDetailsController struct {
 }
 
 func NewConfigDetailController(
-	app *core.AppServer,
+	app *appServer.AppServer,
 	db *gorm.DB,
 	service *service.ConfigDetailsService,
 ) *ConfigDetailsController {

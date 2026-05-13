@@ -3,8 +3,8 @@ package wsManager
 import (
 	"fmt"
 	"strings"
+	"wails-router-link/service/core/component/appServer"
 
-	"wails-router-link/service/core"
 	"wails-router-link/service/types"
 	"wails-router-link/service/utility"
 
@@ -16,10 +16,10 @@ type WsManager struct {
 	Server  *melody.Melody
 	Clients map[string]*melody.Session
 	config  *types.AppConfig
-	Http    *core.AppServer
+	Http    *appServer.AppServer
 }
 
-func NewWsManager(config *types.AppConfig, server *core.AppServer) *WsManager {
+func NewWsManager(config *types.AppConfig, server *appServer.AppServer) *WsManager {
 	config.WebSocket.Enable = true
 	return &WsManager{
 		Server:  melody.New(), // 创建 WS 示例

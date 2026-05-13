@@ -1,4 +1,4 @@
-package wailsApp
+package wailsAppLifeCycle
 
 import (
 	"context"

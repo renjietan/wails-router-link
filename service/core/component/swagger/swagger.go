@@ -2,8 +2,8 @@ package swagger
 
 import (
 	"fmt"
+	"wails-router-link/service/core/component/appServer"
 
-	"wails-router-link/service/core"
 	"wails-router-link/service/docs"
 	"wails-router-link/service/types"
 	"wails-router-link/service/utility/response"
@@ -14,14 +14,13 @@ import (
 )
 
 type SwaggerManager struct {
-	Server      *core.AppServer
+	Server      *appServer.AppServer
 	HandlerFunc gin.HandlerFunc
 	Config      *types.AppConfig
 }
 
-func NewSwaggerManager(appserver *core.AppServer, appConfig *types.AppConfig) *SwaggerManager {
+func NewSwaggerManager(appserver *appServer.AppServer, appConfig *types.AppConfig) *SwaggerManager {
 	var swaggerHandler gin.HandlerFunc
-	fmt.Println("appconfig===============", &appConfig)
 	if appConfig.Debug == false {
 		swaggerHandler = func(c *gin.Context) {
 			response.ERROR(c, "swagger 中间件已被禁用")

@@ -3,10 +3,11 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"wails-router-link/service/core/component/appServer"
+
+	dto "wails-router-link/service/api/DTO"
 
 	"github.com/gin-gonic/gin"
-	dto "wails-router-link/service/api/DTO"
-	"wails-router-link/service/core"
 )
 
 type TestController struct {
@@ -14,7 +15,7 @@ type TestController struct {
 }
 
 func NewTestController(
-	app *core.AppServer,
+	app *appServer.AppServer,
 ) *ConfigController {
 	return &ConfigController{
 		BaseController: BaseController{

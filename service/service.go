@@ -16,9 +16,6 @@ import (
 	"go.uber.org/fx/fxevent"
 )
 
-type AppLifecycle struct {
-}
-
 func NewServiceApp(assets embed.FS, icon []byte) {
 	configFile := os.Getenv("CONFIG_FILE")
 	if configFile == "" {
@@ -73,6 +70,7 @@ func getModules(assets embed.FS, icon []byte) []fx.Option {
 	fxOptions = append(fxOptions, fx_module.FXSQLiteModule)
 	fxOptions = append(fxOptions, fx_module.FXCronModule)
 	fxOptions = append(fxOptions, fx_module.FxWsModule)
-	fxOptions = append(fxOptions, fx_module.FXWailsAppModule(assets, icon))
+	fxOptions = append(fxOptions, fx_module.FXWailsAppLifeCycleModule(assets, icon))
+	fxOptions = append(fxOptions, fx_module.FXLifeCycleModule)
 	return fxOptions
 }
