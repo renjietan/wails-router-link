@@ -1,0 +1,30 @@
+app_name = "gin-template"
+version = "1.0.0"
+static_dir = "D:\\work\\go\\template\\client\\project\\wails-router-link\\static"
+host = "localhost"
+port = 3344
+log_dir = ""
+
+[sqlite]
+  enable = false
+  base_path = "D:\\work\\go\\template\\client\\project\\wails-router-link\\static\\db"
+  sqlite_encryption_key = "2DD29CA851E7B56E4697B0E1F08507293D761A05CE4D1B628663F411A8086D99"
+
+[logger]
+  level = "debug"
+  file_path = "D:\\work\\go\\template\\client\\project\\wails-router-link\\static\\logs\\app"
+  max_age = "720h0m0s"
+  rotation_time = "24h0m0s"
+
+[upload]
+  file_path = "D:\\work\\go\\template\\client\\project\\wails-router-link\\static\\uploads"
+
+[websocket]
+  enable = false
+  base_url = "/ws/:id"
+
+[cron]
+  enable = false
+
+[swagger]
+  enable = false

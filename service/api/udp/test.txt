@@ -1,0 +1,123 @@
+package main
+
+import (
+	"github.com/elliotchance/orderedmap/v3"
+
+	udp_utils_parse "studu5/udp/utils/parse"
+	udp_utils_struct "studu5/udp/utils/stuct"
+)
+
+func main() {
+	res := send()
+	reveive(res)
+}
+
+func reveive(buf []byte) {
+	data := orderedmap.NewOrderedMap[string, udp_utils_struct.Base]()
+	data.Set("ee", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  1,
+	})
+	data.Set("ee2", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  1,
+	})
+	data.Set("length", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{3, 6},
+		Size:  2,
+	})
+	data.Set("data1", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  12,
+	})
+	data.Set("data2", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  12,
+	})
+	data.Set("data3", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  5,
+	})
+	data.Set("data33", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  7,
+	})
+	data.Set("length2", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{8, 9},
+		Size:  4,
+	})
+	data.Set("data4", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("data5", udp_utils_struct.Base{
+		Data:  []byte{},
+		Range: []int{},
+		Size:  0,
+	})
+	udp_utils_parse.ParseRevBuf(data, buf)
+}
+
+func send() []byte {
+	data := orderedmap.NewOrderedMap[string, udp_utils_struct.Base]()
+	data.Set("ee", udp_utils_struct.Base{
+		Data:  0xee,
+		Range: []int{},
+		Size:  1,
+	})
+	data.Set("ee2", udp_utils_struct.Base{
+		Data:  0xee,
+		Range: []int{},
+		Size:  1,
+	})
+	data.Set("length", udp_utils_struct.Base{
+		Data:  0x00,
+		Range: []int{3, 6},
+		Size:  2,
+	})
+	data.Set("data1", udp_utils_struct.Base{
+		Data:  "hello world1",
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("data2", udp_utils_struct.Base{
+		Data:  "hello world2",
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("data3", udp_utils_struct.Base{
+		Data:  "hello",
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("data33", udp_utils_struct.Base{
+		Data:  "hello-1",
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("length2", udp_utils_struct.Base{
+		Data:  0x00,
+		Range: []int{8, 9},
+		Size:  4,
+	})
+	data.Set("data4", udp_utils_struct.Base{
+		Data:  "hello world1",
+		Range: []int{},
+		Size:  0,
+	})
+	data.Set("data5", udp_utils_struct.Base{
+		Data:  "hello world2",
+		Range: []int{},
+		Size:  0,
+	})
+	return udp_utils_parse.ParseSendBuf(data)
+}

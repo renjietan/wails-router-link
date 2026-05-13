@@ -1,0 +1,543 @@
+definitions:
+  controller.BroadcastRequest:
+    properties:
+      msg:
+        example: hello
+        type: string
+    type: object
+  controller.ErrorResponse:
+    properties:
+      detail:
+        example: 'dial udp: ...'
+        type: string
+      error:
+        example: 需要字段 msg
+        type: string
+    type: object
+  controller.StatusResponse:
+    properties:
+      status:
+        example: ok
+        type: string
+    type: object
+  controller.WsClientCountResponse:
+    properties:
+      client_count:
+        example: 3
+        type: integer
+    type: object
+  dto.ConfigDTO:
+    properties:
+      details:
+        $ref: '#/definitions/dto.ConfigDetailsDTO'
+      name:
+        description: 配置名称
+        example: name-张三
+        type: string
+      value:
+        description: 配置值
+        example: value-张三
+        type: string
+    required:
+    - details
+    - name
+    - value
+    type: object
+  dto.ConfigDetailsDTO:
+    properties:
+      content:
+        description: 配置详情
+        example: 配置详情
+        type: string
+    required:
+    - content
+    type: object
+  dto.ConfigsDTO:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ConfigDTO'
+        type: array
+    type: object
+  dto.TestFormDTO:
+    properties:
+      password:
+        type: string
+      user:
+        type: string
+    required:
+    - password
+    - user
+    type: object
+  dto.UpdatesConfigDTO:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/entity.ConfigEntity'
+        type: array
+    type: object
+  entity.ConfigDetailEntity:
+    properties:
+      cid:
+        type: string
+      content:
+        type: string
+      created_at:
+        description: 时间字段，使用 datetime(3) 以支持毫秒精度
+        type: string
+      deleted_at:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 软删除字段，使用指针，允许为 NULL
+      id:
+        description: 主键，类型为 bigint unsigned，自增
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  entity.ConfigEntity:
+    properties:
+      created_at:
+        description: 时间字段，使用 datetime(3) 以支持毫秒精度
+        type: string
+      deleted_at:
+        allOf:
+        - $ref: '#/definitions/gorm.DeletedAt'
+        description: 软删除字段，使用指针，允许为 NULL
+      details:
+        items:
+          $ref: '#/definitions/entity.ConfigDetailEntity'
+        type: array
+      id:
+        description: 主键，类型为 bigint unsigned，自增
+        type: integer
+      name:
+        description: 配置名称
+        type: string
+      updated_at:
+        type: string
+      value:
+        description: 配置的值
+        type: string
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  types.BizCode:
+    enum:
+    - 0
+    - 1
+    - 401
+    type: integer
+    x-enum-comments:
+      NotAuthorized: 未授权
+    x-enum-descriptions:
+    - ""
+    - ""
+    - 未授权
+    x-enum-varnames:
+    - Success
+    - Failed
+    - NotAuthorized
+  types.Response:
+    properties:
+      code:
+        $ref: '#/definitions/types.BizCode'
+      data: {}
+      message:
+        type: string
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /config/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 根据ID删除
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 删除
+      tags:
+      - Config
+  /config/insert:
+    post:
+      consumes:
+      - application/json
+      description: 配置 描述
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ConfigDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ConfigEntity'
+      summary: 创建 配置 - 含关联 插入
+      tags:
+      - Config
+  /config/insertMany:
+    patch:
+      consumes:
+      - application/json
+      description: 批量配置 描述
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ConfigsDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.ConfigEntity'
+            type: array
+      summary: 批量创建 配置
+      tags:
+      - Config
+  /config/list:
+    get:
+      consumes:
+      - application/json
+      description: 分页查询配置项，按指定字段排序。默认按创建时间倒序排列。
+      parameters:
+      - description: 名称
+        example: 张三
+        in: query
+        name: name
+        type: string
+      - description: 排序/规则 默认:desc（倒序）
+        enum:
+        - asc
+        - desc
+        in: query
+        name: order
+        type: string
+      - description: '当前页码 默认: 1'
+        example: 1
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: '条数 默认: 10'
+        example: 10
+        in: query
+        maximum: 100
+        minimum: 1
+        name: page_size
+        type: integer
+      - description: '排序 默认: created_at'
+        example: created_at
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 分页数据
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 服务器内部错误
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取配置列表（分页+排序）
+      tags:
+      - Config
+  /config/test:
+    get:
+      consumes:
+      - application/json
+      description: 测试
+      parameters:
+      - description: 名称
+        example: 张三
+        in: query
+        name: name
+        type: string
+      - description: 排序/规则 默认:desc（倒序）
+        enum:
+        - asc
+        - desc
+        in: query
+        name: order
+        type: string
+      - description: '当前页码 默认: 1'
+        example: 1
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: '条数 默认: 10'
+        example: 10
+        in: query
+        maximum: 100
+        minimum: 1
+        name: page_size
+        type: integer
+      - description: '排序 默认: created_at'
+        example: created_at
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 分页数据
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 服务器内部错误
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 测试
+      tags:
+      - Config
+  /config/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 根据ID更新其基本信息
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 需要更新的信息
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ConfigDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 更新
+      tags:
+      - Config
+  /config/updates:
+    put:
+      consumes:
+      - application/json
+      description: 批量更新其基本信息
+      parameters:
+      - description: 需要更新的信息
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatesConfigDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "404":
+          description: 记录不存在
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 批量更新
+      tags:
+      - Config
+  /config/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 通过 multipart/form-data 上传文件，支持图片、文档等类型
+      parameters:
+      - description: 要上传的文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传成功
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 上传单个文件
+      tags:
+      - Config
+  /config_detail/{id}:
+    post:
+      consumes:
+      - application/json
+      description: 根据cId 获取 配置详情
+      parameters:
+      - description: 配置ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传成功
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 根据cId 获取 配置详情
+      tags:
+      - ConfigDetail
+  /test/form:
+    post:
+      consumes:
+      - application/json
+      description: form
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TestFormDTO'
+      produces:
+      - application/json
+      responses: {}
+      summary: form
+      tags:
+      - Test
+  /ws/broadcast:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 消息体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.BroadcastRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.StatusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: 广播 WebSocket 消息
+      tags:
+      - websocket
+  /ws/count:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.WsClientCountResponse'
+      summary: 获取当前 WebSocket 连接数
+      tags:
+      - websocket
+swagger: "2.0"
