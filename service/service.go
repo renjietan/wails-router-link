@@ -64,13 +64,13 @@ func NewServiceApp(assets embed.FS, icon []byte) {
 
 func getModules(assets embed.FS, icon []byte) []fx.Option {
 	var fxOptions []fx.Option
+	fxOptions = append(fxOptions, fx_module.FXLifeCycleModule(assets, icon))
 	fxOptions = append(fxOptions, fx_module.FxGinModule)
 	fxOptions = append(fxOptions, fx_module.FxGormConfigModule)
 	fxOptions = append(fxOptions, fx_module.FXSwaggerModule)
 	fxOptions = append(fxOptions, fx_module.FXSQLiteModule)
 	fxOptions = append(fxOptions, fx_module.FXCronModule)
 	fxOptions = append(fxOptions, fx_module.FxWsModule)
-	fxOptions = append(fxOptions, fx_module.FXWailsAppLifeCycleModule(assets, icon))
-	fxOptions = append(fxOptions, fx_module.FXLifeCycleModule)
+	//fxOptions = append(fxOptions, fx_module.FXWailsAppLifeCycleModule(assets, icon))
 	return fxOptions
 }

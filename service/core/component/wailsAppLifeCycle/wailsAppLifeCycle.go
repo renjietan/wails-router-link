@@ -8,6 +8,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
+// App 暂时废弃
 type App struct {
 	Ctx          context.Context
 	WailsOptions *options.App

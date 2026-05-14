@@ -1,6 +1,8 @@
 package fxLifeCycle
 
-import "context"
+import (
+	"context"
+)
 
 type FxLifecycle struct {
 }
